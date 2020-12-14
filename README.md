@@ -12,9 +12,22 @@
 
 ## Day 2 - Password policies
 
-This problem was relatively easy by Advent of Code standards. However, the second part is a great vehicle to make a couple of quick remarks about mental models of programming, string indexing, and how optimizations work in rust. In this second part we're asked to identify whether a given character occurs in one of the two given indices of a string, but not both.
+This problem was relatively easy by Advent of Code standards. However, the second part is a great vehicle to make a couple of quick remarks about mental models of programming, string indexing, and how optimizations work in rust.
 
-The first implementation runs in around 80 microseconds, while the later optimized version runs in around 25 microseconds.
+### The problem
+
+We're given a string, a character, and two numbers.
+
+```rust
+struct Policy {
+    min: usize,
+    max: usize,
+    character: char,
+    password: String,
+}
+```
+
+We're told that the `character` must either be in the `min` position or the `max` position in the `password` string - not both. The first implementation ran in around 80 microseconds, while the later optimized version runs in around 25 microseconds.
 
 ### Initial implementation
 
