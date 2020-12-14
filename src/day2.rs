@@ -18,15 +18,19 @@ impl Policy {
     }
 
     fn is_valid_index(&self) -> bool {
-        let chars = self.password.chars().collect::<Vec<_>>();
-        (chars[self.min - 1] == self.character && chars[self.max - 1] != self.character)
-            || (chars[self.min - 1] != self.character && chars[self.max - 1] == self.character)
+        let mut chars = Vec::with_capacity(self.password.len());
+        chars.extend(self.password.chars());
+        (*unsafe { chars.get_unchecked(self.min - 1) } == self.character
+            && *unsafe { chars.get_unchecked(self.max - 1) } != self.character)
+            || (*unsafe { chars.get_unchecked(self.min - 1) } != self.character
+                && *unsafe { chars.get_unchecked(self.max - 1) } == self.character)
     }
 
     fn is_valid_index_alternate(&self) -> bool {
         self.password
             .char_indices()
-            .filter(|(idx, ch)| (*idx == self.min || *idx == self.max) && *ch == self.character)
+            .filter(|(idx, _)| *idx == self.min || *idx == self.max)
+            .filter(|(_, ch)| *ch == self.character)
             .count()
             == 1
     }
@@ -81,7 +85,7 @@ fn part2(policies: &[Policy]) -> usize {
         .count()
 }
 
-#[aoc(day2, part2, full_iter)]
+#[aoc(day2, part2, iter)]
 fn part2_alternate(policies: &[Policy]) -> usize {
     policies
         .iter()
